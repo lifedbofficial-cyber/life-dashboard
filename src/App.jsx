@@ -1,8 +1,12 @@
 import { Routes, Route, useLocation } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { useAuth } from './context/AuthContext';
+import { useApp } from './context/AppContext';
 import Sidebar from './components/Sidebar';
 import ToastSystem from './components/ToastSystem';
 import AICoach from './components/AICoach';
 import Onboarding from './components/Onboarding';
+import Login from './components/Login';
 import Dashboard from './pages/Dashboard';
 import Habits from './pages/Habits';
 import Goals from './pages/Goals';
@@ -13,16 +17,35 @@ import Journal from './pages/Journal';
 import Analytics from './pages/Analytics';
 import Achievements from './pages/Achievements';
 import Profile from './pages/Profile';
-import { useApp } from './context/AppContext';
+
+function LoadingScreen() {
+  return (
+    <div className="fixed inset-0 flex items-center justify-center" style={{ background: 'var(--bg-primary)' }}>
+      <div className="text-center">
+        <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+          className="w-12 h-12 rounded-full border-2 border-purple-500 border-t-transparent mx-auto mb-4" />
+        <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Loading your Life OS...</p>
+      </div>
+    </div>
+  );
+}
 
 export default function App() {
   const location = useLocation();
-  const { user } = useApp();
+  const { firebaseUser, loading: authLoading } = useAuth();
+  const { user, dataLoaded } = useApp();
+
+  // Show loading while checking auth
+  if (authLoading) return <LoadingScreen />;
+
+  // Show login if not signed in
+  if (!firebaseUser) return <Login />;
+
+  // Show loading while fetching data from Firebase
+  if (!dataLoaded) return <LoadingScreen />;
 
   // Show onboarding for new users
-  if (!user.onboarded) {
-    return <Onboarding />;
-  }
+  if (!user.onboarded) return <Onboarding />;
 
   return (
     <div className="flex min-h-screen" style={{ background: 'var(--bg-primary)', color: 'var(--text-primary)' }}>

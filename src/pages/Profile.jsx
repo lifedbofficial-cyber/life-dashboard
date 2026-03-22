@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useApp } from '../context/AppContext';
+import { useAuth } from '../context/AuthContext';
 import { getLevelProgress, getLevelTitle, LEVEL_THRESHOLDS } from '../utils/xpSystem';
 import { ACHIEVEMENTS } from '../utils/achievements';
 import { Download, Trash2, Edit3, Check, X, Shield, Zap, Flame, Trophy } from 'lucide-react';
@@ -9,6 +10,7 @@ const AVATARS = ['🧙', '🦸', '🧑‍🚀', '🧑‍💻', '🧝', '🥷', '
 
 export default function Profile() {
   const { user, updateUser, levelData, habits, goals, journal, exportData, resetAllData } = useApp();
+  const { firebaseUser, logout } = useAuth();
   const [editingName, setEditingName] = useState(false);
   const [editingAvatar, setEditingAvatar] = useState(false);
   const [nameInput, setNameInput] = useState(user.name);
@@ -167,6 +169,20 @@ export default function Profile() {
         className="glass-card p-5">
         <h3 className="font-display font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>Data Management</h3>
         <div className="flex flex-col gap-3">
+
+          {/* Sign Out */}
+          <div className="flex items-center justify-between p-4 rounded-xl" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)' }}>
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: 'rgba(139,92,246,0.12)' }}>
+                <span className="text-base">🚪</span>
+              </div>
+              <div>
+                <div className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Sign Out</div>
+                <div className="text-xs text-muted">{firebaseUser?.email}</div>
+              </div>
+            </div>
+            <button onClick={logout} className="btn-secondary text-sm px-4 py-2">Sign Out</button>
+          </div>
 
           {/* Export */}
           <div className="flex items-center justify-between p-4 rounded-xl" style={{ background: 'rgba(6,182,212,0.06)', border: '1px solid rgba(6,182,212,0.15)' }}>
