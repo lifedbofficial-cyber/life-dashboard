@@ -44,14 +44,14 @@ export default function Health() {
 
       {/* Health Score */}
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}
-        className="glass-card p-6 mb-6 flex items-center gap-6">
+        className="glass-card p-6 mb-6 flex flex-wrap items-center gap-6">
         <RingProgress value={water} max={8} color="#06b6d4" size={90} strokeWidth={8}>
           <span className="text-xs font-mono font-bold" style={{ color: '#22d3ee' }}>{Math.round((water/8)*100)}%</span>
         </RingProgress>
         <div>
           <div className="font-display font-bold text-xl mb-1" style={{ color: 'var(--text-primary)' }}>Daily Health Overview</div>
-          <div className="text-sm" style={{ color: 'var(--text-muted)' }}>Stay consistent. Every healthy choice compounds over time.</div>
-          <div className="flex gap-4 mt-3">
+          <div className="text-sm mb-3" style={{ color: 'var(--text-muted)' }}>Stay consistent. Every healthy choice compounds over time.</div>
+<div className="flex flex-wrap gap-4 mt-1">
             {[
               { label: 'Water', val: `${water}/8 glasses`, ok: water >= 8, color: '#22d3ee' },
               { label: 'Steps', val: `${steps.toLocaleString()}`, ok: steps >= 10000, color: '#34d399' },

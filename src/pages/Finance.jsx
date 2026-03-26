@@ -121,9 +121,9 @@ export default function Finance() {
               style={{ background: s.bg, border: `1px solid ${s.border}`, color: s.textColor }}>
               {s.icon}
             </div>
-            <div className="font-display font-bold text-xl mb-0.5" style={{ color: s.textColor }}>
-              {s.prefix}{s.value.toLocaleString()}
-            </div>
+            <div className="font-display font-bold mb-0.5 truncate" style={{ color: s.textColor, fontSize: 'clamp(0.85rem, 2vw, 1.1rem)' }}>
+  {s.prefix}{s.value.toLocaleString()}
+</div>
             <div className="text-xs text-muted">{s.label} this month</div>
           </motion.div>
         ))}
