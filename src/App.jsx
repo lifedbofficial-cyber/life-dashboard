@@ -17,6 +17,7 @@ import Journal from './pages/Journal';
 import Analytics from './pages/Analytics';
 import Achievements from './pages/Achievements';
 import Profile from './pages/Profile';
+import WeeklyReport from './pages/WeeklyReport';
 
 function LoadingScreen() {
   return (
@@ -35,16 +36,9 @@ export default function App() {
   const { firebaseUser, loading: authLoading } = useAuth();
   const { user, dataLoaded } = useApp();
 
-  // Show loading while checking auth
   if (authLoading) return <LoadingScreen />;
-
-  // Show login if not signed in
   if (!firebaseUser) return <Login />;
-
-  // Show loading while fetching data from Firebase
   if (!dataLoaded) return <LoadingScreen />;
-
-  // Show onboarding for new users
   if (!user.onboarded) return <Onboarding />;
 
   return (
@@ -64,6 +58,7 @@ export default function App() {
           <Route path="/journal" element={<Journal />} />
           <Route path="/analytics" element={<Analytics />} />
           <Route path="/achievements" element={<Achievements />} />
+          <Route path="/weekly" element={<WeeklyReport />} />
           <Route path="/profile" element={<Profile />} />
         </Routes>
       </main>

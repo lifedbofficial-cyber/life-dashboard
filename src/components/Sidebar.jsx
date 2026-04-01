@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useApp } from '../context/AppContext';
 import {
   LayoutDashboard, Flame, Target, Smile, Heart,
-  DollarSign, BookOpen, BarChart2, Moon, Sun, Trophy, X, Menu, User
+  DollarSign, BookOpen, BarChart2, Moon, Sun, Trophy, X, Menu, User, CalendarDays
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -17,6 +17,7 @@ const NAV_ITEMS = [
   { to: '/journal', icon: BookOpen, label: 'Journal' },
   { to: '/analytics', icon: BarChart2, label: 'Analytics' },
   { to: '/achievements', icon: Trophy, label: 'Achievements' },
+  { to: '/weekly', icon: CalendarDays, label: 'Weekly Report', badge: new Date().getDay() === 0 ? '✨' : null },
   { to: '/profile', icon: User, label: 'Profile' },
 ];
 
@@ -61,13 +62,14 @@ export default function Sidebar() {
       </NavLink>
 
       {/* Navigation */}
-      <nav className="flex flex-col gap-0.5 flex-1">
-        {NAV_ITEMS.map(({ to, icon: Icon, label }) => (
+      <nav className="flex flex-col gap-0.5 flex-1 overflow-y-auto">
+        {NAV_ITEMS.map(({ to, icon: Icon, label, badge }) => (
           <NavLink key={to} to={to} end={to === '/'}
             className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
             onClick={() => setMobileOpen(false)}>
             <Icon size={16} />
-            <span>{label}</span>
+            <span className="flex-1">{label}</span>
+            {badge && <span className="text-xs">{badge}</span>}
           </NavLink>
         ))}
       </nav>

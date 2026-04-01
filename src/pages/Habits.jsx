@@ -36,7 +36,6 @@ export default function Habits() {
     setShowAdd(false);
   };
 
-  // Drag to reorder
   const handleDragStart = (i) => setDragIdx(i);
   const handleDragOver = (e, i) => { e.preventDefault(); setDragOverIdx(i); };
   const handleDrop = (i) => {
@@ -51,13 +50,6 @@ export default function Habits() {
 
   const completedCount = habits.filter(h => h.completedDates?.includes(today)).length;
   const completionRate = habits.length > 0 ? Math.round((completedCount / habits.length) * 100) : 0;
-
-  // Group by category preserving order
-  const grouped = {};
-  habits.forEach(h => {
-    if (!grouped[h.category]) grouped[h.category] = [];
-    grouped[h.category].push(h);
-  });
 
   return (
     <div className="p-6 lg:p-8 max-w-4xl mx-auto">
@@ -85,10 +77,10 @@ export default function Habits() {
           <motion.div className="xp-bar-fill" initial={{ width: 0 }} animate={{ width: `${completionRate}%` }}
             transition={{ duration: 1, ease: 'easeOut' }} />
         </div>
-        <p className="text-xs text-muted mt-2">💡 Drag the grip icon to reorder your habits</p>
+        <p className="text-xs text-muted mt-2">💡 Drag grip to reorder · Double tap ○ to complete</p>
       </motion.div>
 
-      {/* Habit List — flat, draggable */}
+      {/* Habit List */}
       <div className="flex flex-col gap-2.5 mb-4">
         {habits.map((h, i) => {
           const done = h.completedDates?.includes(today);
@@ -142,7 +134,21 @@ export default function Habits() {
                     </button>
                   )}
 
-                  <button onClick={() => handleComplete(h.id)} className="transition-all">
+                  {/* ✅ Double tap to complete */}
+                  <button
+                    onClick={() => {
+                      const now = Date.now();
+                      window._habitTap = window._habitTap || {};
+                      const last = window._habitTap[h.id] || 0;
+                      if (now - last < 400) {
+                        handleComplete(h.id);
+                        window._habitTap[h.id] = 0;
+                      } else {
+                        window._habitTap[h.id] = now;
+                      }
+                    }}
+                    className="transition-all"
+                    title="Double tap to complete">
                     {done
                       ? <CheckCircle2 size={26} className="text-emerald-400" />
                       : <Circle size={26} className="hover:text-purple-400 transition-colors" style={{ color: 'rgba(255,255,255,0.2)' }} />}
