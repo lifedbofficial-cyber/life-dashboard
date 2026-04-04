@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useAuth } from './context/AuthContext';
 import { useApp } from './context/AppContext';
 import Sidebar from './components/Sidebar';
+import BottomNav from './components/BottomNav';
 import ToastSystem from './components/ToastSystem';
 import AICoach from './components/AICoach';
 import Onboarding from './components/Onboarding';
@@ -25,7 +26,8 @@ function LoadingScreen() {
       <div className="text-center">
         <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
           className="w-12 h-12 rounded-full border-2 border-purple-500 border-t-transparent mx-auto mb-4" />
-        <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Loading your Life OS...</p>
+        <div className="text-lg mb-1" style={{ color: 'var(--text-primary)' }}>◈ LIFE OS</div>
+        <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Loading your dashboard...</p>
       </div>
     </div>
   );
@@ -62,6 +64,7 @@ export default function App() {
           <Route path="/profile" element={<Profile />} />
         </Routes>
       </main>
+      <BottomNav />
       <ToastSystem />
       <AICoach />
     </div>
