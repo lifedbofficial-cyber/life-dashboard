@@ -19,6 +19,7 @@ import Analytics from './pages/Analytics';
 import Achievements from './pages/Achievements';
 import Profile from './pages/Profile';
 import WeeklyReport from './pages/WeeklyReport';
+import { NotificationBanner, useSmartReminders } from './components/notifications';
 
 function LoadingScreen() {
   return (
@@ -33,22 +34,10 @@ function LoadingScreen() {
   );
 }
 
-export default function App() {
+// Inner component so hooks can access AppContext
+function AppInner() {
+  useSmartReminders();
   const location = useLocation();
-  const { firebaseUser, loading: authLoading } = useAuth();
-  const { user, dataLoaded } = useApp();
-
-  // Show loading while checking auth
-  if (authLoading) return <LoadingScreen />;
-
-  // Show landing page for non-logged-in users
-  if (!firebaseUser) return <Landing />;
-
-  // Show loading while fetching data
-  if (!dataLoaded) return <LoadingScreen />;
-
-  // Show onboarding for new users
-  if (!user.onboarded) return <Onboarding />;
 
   return (
     <div className="flex min-h-screen" style={{ background: 'var(--bg-primary)', color: 'var(--text-primary)' }}>
@@ -74,6 +63,19 @@ export default function App() {
       <BottomNav />
       <ToastSystem />
       <AICoach />
+      <NotificationBanner />
     </div>
   );
+}
+
+export default function App() {
+  const { firebaseUser, loading: authLoading } = useAuth();
+  const { user, dataLoaded } = useApp();
+
+  if (authLoading) return <LoadingScreen />;
+  if (!firebaseUser) return <Landing />;
+  if (!dataLoaded) return <LoadingScreen />;
+  if (!user.onboarded) return <Onboarding />;
+
+  return <AppInner />;
 }

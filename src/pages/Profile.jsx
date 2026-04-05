@@ -4,9 +4,10 @@ import { useApp } from '../context/AppContext';
 import { useAuth } from '../context/AuthContext';
 import { getLevelProgress, getLevelTitle, LEVEL_THRESHOLDS } from '../utils/xpSystem';
 import { ACHIEVEMENTS } from '../utils/achievements';
-import { Download, Trash2, Edit3, Check, X, Shield, Zap, Flame, Trophy } from 'lucide-react';
+import { Download, Trash2, Edit3, Check, X } from 'lucide-react';
+import { NotificationSettings } from '../components/notifications';
 
-const AVATARS = ['🧙', '🦸', '🧑‍🚀', '🧑‍💻', '🧝', '🥷', '🧑‍🎨', '🦊', '🐉', '⚡', '🌟', '🔥', '💎', '🚀', '🎯'];
+const AVATARS = ['🧙','🦸','🧑‍🚀','🧑‍💻','🧝','🥷','🧑‍🎨','🦊','🐉','⚡','🌟','🔥','💎','🚀','🎯'];
 
 export default function Profile() {
   const { user, updateUser, levelData, habits, goals, journal, exportData, resetAllData } = useApp();
@@ -32,11 +33,6 @@ export default function Profile() {
   };
 
   const unlockedCount = user.unlockedAchievements?.length || 0;
-  const totalHabits = habits.length;
-  const completedGoals = goals.filter(g => g.completed).length;
-
-  const nextLevelXP = LEVEL_THRESHOLDS[levelData.level] || LEVEL_THRESHOLDS[LEVEL_THRESHOLDS.length - 1];
-  const currentLevelXP = LEVEL_THRESHOLDS[levelData.level - 1] || 0;
 
   const stats = [
     { icon: '🔥', label: 'Day Streak', value: user.streak },
@@ -50,7 +46,7 @@ export default function Profile() {
   ];
 
   return (
-    <div className="p-6 lg:p-8 max-w-3xl mx-auto">
+    <div className="p-6 lg:p-8 max-w-3xl mx-auto pb-24 lg:pb-8">
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
         <h1 className="font-display font-bold text-3xl mb-1" style={{ color: 'var(--text-primary)' }}>Profile</h1>
         <p className="text-sm text-muted">Manage your identity and data.</p>
@@ -59,15 +55,11 @@ export default function Profile() {
       {/* Profile Card */}
       <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
         className="glass-card p-6 mb-5 relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none" style={{
-          background: 'radial-gradient(circle at top left, rgba(139,92,246,0.08), transparent 60%)',
-        }} />
+        <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(circle at top left, rgba(139,92,246,0.08), transparent 60%)' }} />
         <div className="relative z-10 flex items-center gap-5 flex-wrap">
-          {/* Avatar */}
           <div className="relative">
-            <motion.div whileHover={{ scale: 1.05 }}
-              onClick={() => setEditingAvatar(true)}
-              className="w-20 h-20 rounded-2xl flex items-center justify-center text-4xl cursor-pointer transition-all"
+            <motion.div whileHover={{ scale: 1.05 }} onClick={() => setEditingAvatar(true)}
+              className="w-20 h-20 rounded-2xl flex items-center justify-center text-4xl cursor-pointer"
               style={{ background: 'rgba(139,92,246,0.15)', border: '2px solid rgba(139,92,246,0.3)' }}>
               {user.avatar}
             </motion.div>
@@ -78,7 +70,6 @@ export default function Profile() {
             </button>
           </div>
 
-          {/* Name & Level */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
               {editingName ? (
@@ -86,10 +77,10 @@ export default function Profile() {
                   <input value={nameInput} onChange={e => setNameInput(e.target.value)}
                     onKeyDown={e => { if (e.key === 'Enter') saveName(); if (e.key === 'Escape') setEditingName(false); }}
                     autoFocus className="input-field py-1.5 text-lg font-semibold" style={{ maxWidth: 200 }} />
-                  <button onClick={saveName} className="w-7 h-7 rounded-lg flex items-center justify-center bg-emerald-500/20 hover:bg-emerald-500/30">
+                  <button onClick={saveName} className="w-7 h-7 rounded-lg flex items-center justify-center bg-emerald-500/20">
                     <Check size={14} className="text-emerald-400" />
                   </button>
-                  <button onClick={() => setEditingName(false)} className="w-7 h-7 rounded-lg flex items-center justify-center bg-red-500/10 hover:bg-red-500/20">
+                  <button onClick={() => setEditingName(false)} className="w-7 h-7 rounded-lg flex items-center justify-center bg-red-500/10">
                     <X size={14} className="text-red-400" />
                   </button>
                 </div>
@@ -103,43 +94,37 @@ export default function Profile() {
                 </>
               )}
             </div>
+            {firebaseUser?.email && <div className="text-xs text-muted mb-2">{firebaseUser.email}</div>}
             <div className="flex items-center gap-2 mb-3">
               <span className="font-mono text-sm font-bold" style={{ color: '#a78bfa' }}>Level {levelData.level}</span>
               <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'rgba(139,92,246,0.12)', color: '#a78bfa', border: '1px solid rgba(139,92,246,0.25)' }}>{levelData.title}</span>
             </div>
             <div>
-              <div className="flex justify-between text-xs mb-1" style={{ color: 'var(--text-muted)' }}>
+              <div className="flex justify-between text-xs mb-1 text-muted">
                 <span>{levelData.xpInLevel} XP</span>
                 <span>{levelData.xpForLevel} XP to next level</span>
               </div>
               <div className="xp-bar">
-                <motion.div className="xp-bar-fill" initial={{ width: 0 }} animate={{ width: `${levelData.progress}%` }}
-                  transition={{ duration: 1, delay: 0.3 }} />
+                <motion.div className="xp-bar-fill" initial={{ width: 0 }} animate={{ width: `${levelData.progress}%` }} transition={{ duration: 1, delay: 0.3 }} />
               </div>
             </div>
           </div>
         </div>
 
-        {/* Avatar Picker */}
         <AnimatePresence>
           {editingAvatar && (
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }}
               className="mt-5 pt-4 border-t" style={{ borderColor: 'var(--border)' }}>
               <div className="flex items-center justify-between mb-3">
                 <span className="text-xs font-medium text-muted uppercase tracking-wider">Pick Avatar</span>
-                <button onClick={() => setEditingAvatar(false)}>
-                  <X size={16} style={{ color: 'var(--text-muted)' }} />
-                </button>
+                <button onClick={() => setEditingAvatar(false)}><X size={16} style={{ color: 'var(--text-muted)' }} /></button>
               </div>
               <div className="flex flex-wrap gap-2">
                 {AVATARS.map(a => (
                   <motion.button key={a} whileHover={{ scale: 1.15 }} whileTap={{ scale: 0.9 }}
                     onClick={() => selectAvatar(a)}
                     className="w-10 h-10 rounded-xl flex items-center justify-center text-xl transition-all"
-                    style={{
-                      background: user.avatar === a ? 'rgba(139,92,246,0.25)' : 'rgba(255,255,255,0.05)',
-                      border: `2px solid ${user.avatar === a ? '#8b5cf6' : 'transparent'}`,
-                    }}>
+                    style={{ background: user.avatar === a ? 'rgba(139,92,246,0.25)' : 'rgba(255,255,255,0.05)', border: `2px solid ${user.avatar === a ? '#8b5cf6' : 'transparent'}` }}>
                     {a}
                   </motion.button>
                 ))}
@@ -154,7 +139,7 @@ export default function Profile() {
         className="glass-card p-5 mb-5">
         <h3 className="font-display font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>Lifetime Stats</h3>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {stats.map((s, i) => (
+          {stats.map(s => (
             <div key={s.label} className="text-center p-3 rounded-xl" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)' }}>
               <div className="text-2xl mb-1">{s.icon}</div>
               <div className="font-display font-bold text-lg" style={{ color: 'var(--text-primary)' }}>{s.value}</div>
@@ -164,17 +149,22 @@ export default function Profile() {
         </div>
       </motion.div>
 
-      {/* Actions */}
-      <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
+      {/* Notification Settings */}
+      <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="mb-5">
+        <NotificationSettings />
+      </motion.div>
+
+      {/* Data Management */}
+      <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}
         className="glass-card p-5">
-        <h3 className="font-display font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>Data Management</h3>
+        <h3 className="font-display font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>Data & Account</h3>
         <div className="flex flex-col gap-3">
 
           {/* Sign Out */}
           <div className="flex items-center justify-between p-4 rounded-xl" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)' }}>
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: 'rgba(139,92,246,0.12)' }}>
-                <span className="text-base">🚪</span>
+                <span>🚪</span>
               </div>
               <div>
                 <div className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Sign Out</div>
@@ -212,7 +202,7 @@ export default function Profile() {
               </div>
             </div>
             <button onClick={() => setShowResetConfirm(true)}
-              className="text-sm px-4 py-2 rounded-xl font-medium transition-all"
+              className="text-sm px-4 py-2 rounded-xl font-medium"
               style={{ background: 'rgba(244,63,94,0.15)', color: '#fb7185', border: '1px solid rgba(244,63,94,0.3)' }}>
               Reset
             </button>
@@ -220,7 +210,7 @@ export default function Profile() {
         </div>
       </motion.div>
 
-      {/* Reset Confirm Modal */}
+      {/* Reset Confirm */}
       <AnimatePresence>
         {showResetConfirm && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -234,7 +224,7 @@ export default function Profile() {
               <div className="flex gap-3">
                 <button onClick={() => setShowResetConfirm(false)} className="btn-secondary flex-1">Cancel</button>
                 <button onClick={handleReset}
-                  className="flex-1 py-2.5 rounded-xl font-semibold text-sm transition-all"
+                  className="flex-1 py-2.5 rounded-xl font-semibold text-sm"
                   style={{ background: 'rgba(244,63,94,0.2)', color: '#fb7185', border: '1px solid rgba(244,63,94,0.4)' }}>
                   Yes, Reset
                 </button>
