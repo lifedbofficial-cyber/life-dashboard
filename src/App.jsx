@@ -7,7 +7,7 @@ import BottomNav from './components/BottomNav';
 import ToastSystem from './components/ToastSystem';
 import AICoach from './components/AICoach';
 import Onboarding from './components/Onboarding';
-import Login from './components/Login';
+import Landing from './pages/Landing';
 import Dashboard from './pages/Dashboard';
 import Habits from './pages/Habits';
 import Goals from './pages/Goals';
@@ -22,12 +22,12 @@ import WeeklyReport from './pages/WeeklyReport';
 
 function LoadingScreen() {
   return (
-    <div className="fixed inset-0 flex items-center justify-center" style={{ background: 'var(--bg-primary)' }}>
+    <div className="fixed inset-0 flex items-center justify-center" style={{ background: '#080612' }}>
       <div className="text-center">
         <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
           className="w-12 h-12 rounded-full border-2 border-purple-500 border-t-transparent mx-auto mb-4" />
-        <div className="text-lg mb-1" style={{ color: 'var(--text-primary)' }}>◈ LIFE OS</div>
-        <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Loading your dashboard...</p>
+        <div className="text-lg mb-1 font-bold" style={{ color: '#fff', fontFamily: 'Syne, sans-serif' }}>◈ LIFE OS</div>
+        <p className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>Loading your dashboard...</p>
       </div>
     </div>
   );
@@ -38,9 +38,16 @@ export default function App() {
   const { firebaseUser, loading: authLoading } = useAuth();
   const { user, dataLoaded } = useApp();
 
+  // Show loading while checking auth
   if (authLoading) return <LoadingScreen />;
-  if (!firebaseUser) return <Login />;
+
+  // Show landing page for non-logged-in users
+  if (!firebaseUser) return <Landing />;
+
+  // Show loading while fetching data
   if (!dataLoaded) return <LoadingScreen />;
+
+  // Show onboarding for new users
   if (!user.onboarded) return <Onboarding />;
 
   return (
