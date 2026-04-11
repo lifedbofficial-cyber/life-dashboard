@@ -2,9 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-
-    <!-- PWA -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
     <link rel="manifest" href="/manifest.json" />
     <meta name="theme-color" content="#7c3aed" />
     <meta name="mobile-web-app-capable" content="yes" />
@@ -12,45 +10,34 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Life OS" />
     <link rel="apple-touch-icon" href="/icon-192.png" />
-
-    <!-- SEO & Social sharing -->
     <title>Life OS — Level Up Your Life</title>
     <meta name="description" content="Your gamified life operating system. Track habits, goals, mood, health, finance and journal. Earn XP. Level up your life." />
-    <meta name="keywords" content="habit tracker, life dashboard, gamified, XP, goals, productivity, mood tracker, finance tracker" />
-
-    <!-- Open Graph (WhatsApp, Facebook, LinkedIn previews) -->
     <meta property="og:title" content="Life OS — Level Up Your Life" />
-    <meta property="og:description" content="Track habits, goals, mood, health, finance and journal. Earn XP. Level up your life." />
+    <meta property="og:description" content="Track habits, goals, mood, health, finance and journal. Earn XP. Level up." />
     <meta property="og:image" content="https://life-dashboard-seven-chi.vercel.app/icon-512.png" />
     <meta property="og:url" content="https://life-dashboard-seven-chi.vercel.app" />
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Life OS" />
-
-    <!-- Twitter card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Life OS — Level Up Your Life" />
-    <meta name="twitter:description" content="Track habits, goals, mood, health, finance and journal. Earn XP. Level up your life." />
     <meta name="twitter:image" content="https://life-dashboard-seven-chi.vercel.app/icon-512.png" />
-
-    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+    <style>
+      *, *::before, *::after { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; overflow-x: hidden; width: 100%; }
+      #root { width: 100%; overflow-x: hidden; }
+      body { background: #0a0814; }
+    </style>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
-
-    <!-- Register Service Worker -->
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js')
-            .then(() => console.log('Life OS: Service Worker registered'))
-            .catch((err) => console.log('SW registration failed:', err));
+          navigator.serviceWorker.register('/sw.js').catch(() => {});
         });
       }
     </script>
