@@ -1,3 +1,39 @@
+/* ── MOBILE OVERFLOW FIX ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+body {
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+#root {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+main {
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+img, svg, video {
+  max-width: 100%;
+}
+
+input, select, textarea {
+  font-size: 16px; /* prevents iOS zoom */
+}
 /* ============================================
    LIFE OS — Global Styles
    Mobile-first, no horizontal overflow
