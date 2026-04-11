@@ -19,25 +19,29 @@ import Analytics from './pages/Analytics';
 import Achievements from './pages/Achievements';
 import Profile from './pages/Profile';
 import WeeklyReport from './pages/WeeklyReport';
-import { NotificationBanner, useSmartReminders } from './components/notifications';
 
 function LoadingScreen() {
   return (
-    <div className="fixed inset-0 flex items-center justify-center" style={{ background: '#080612' }}>
-      <div className="text-center">
+    <div style={{ position: 'fixed', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#080612' }}>
+      <div style={{ textAlign: 'center' }}>
         <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-          className="w-12 h-12 rounded-full border-2 border-purple-500 border-t-transparent mx-auto mb-4" />
-        <div className="text-lg mb-1 font-bold" style={{ color: '#fff', fontFamily: 'Syne, sans-serif' }}>◈ LIFE OS</div>
-        <p className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>Loading your dashboard...</p>
+          style={{ width: 48, height: 48, borderRadius: '50%', border: '2px solid #7c3aed', borderTopColor: 'transparent', margin: '0 auto 16px' }} />
+        <div style={{ color: '#fff', fontWeight: 700, fontSize: 18, marginBottom: 8 }}>◈ LIFE OS</div>
+        <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 14 }}>Loading your dashboard...</p>
       </div>
     </div>
   );
 }
 
-// Inner component so hooks can access AppContext
-function AppInner() {
-  useSmartReminders();
+export default function App() {
   const location = useLocation();
+  const { firebaseUser, loading: authLoading } = useAuth();
+  const { user, dataLoaded } = useApp();
+
+  if (authLoading) return <LoadingScreen />;
+  if (!firebaseUser) return <Landing />;
+  if (!dataLoaded) return <LoadingScreen />;
+  if (!user.onboarded) return <Onboarding />;
 
   return (
     <div className="flex min-h-screen" style={{ background: 'var(--bg-primary)', color: 'var(--text-primary)' }}>
@@ -45,7 +49,7 @@ function AppInner() {
         backgroundImage: 'radial-gradient(circle at 20% 20%, rgba(139,92,246,0.06) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(6,182,212,0.04) 0%, transparent 50%)',
       }} />
       <Sidebar />
-      <main className="flex-1 overflow-y-auto min-h-screen pt-16 lg:pt-0">
+      <main className="flex-1 overflow-y-auto min-h-screen pt-16 lg:pt-0" style={{ minWidth: 0, maxWidth: '100%' }}>
         <Routes location={location} key={location.pathname}>
           <Route path="/" element={<Dashboard />} />
           <Route path="/habits" element={<Habits />} />
@@ -63,19 +67,6 @@ function AppInner() {
       <BottomNav />
       <ToastSystem />
       <AICoach />
-      <NotificationBanner />
     </div>
   );
-}
-
-export default function App() {
-  const { firebaseUser, loading: authLoading } = useAuth();
-  const { user, dataLoaded } = useApp();
-
-  if (authLoading) return <LoadingScreen />;
-  if (!firebaseUser) return <Landing />;
-  if (!dataLoaded) return <LoadingScreen />;
-  if (!user.onboarded) return <Onboarding />;
-
-  return <AppInner />;
 }
