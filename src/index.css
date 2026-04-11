@@ -1,65 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* ── MOBILE OVERFLOW FIX ── */
-*, *::before, *::after {
-  box-sizing: border-box;
-}
+*, *::before, *::after { box-sizing: border-box; }
 
 html {
   overflow-x: hidden;
   width: 100%;
-}
-
-body {
-  overflow-x: hidden;
-  width: 100%;
-  max-width: 100%;
-  -webkit-text-size-adjust: 100%;
-}
-
-#root {
-  width: 100%;
-  max-width: 100%;
-  overflow-x: hidden;
-}
-
-main {
-  min-width: 0;
-  max-width: 100%;
-  overflow-x: hidden;
-}
-
-img, svg, video {
-  max-width: 100%;
-}
-
-input, select, textarea {
-  font-size: 16px; /* prevents iOS zoom */
-}
-/* ============================================
-   LIFE OS — Global Styles
-   Mobile-first, no horizontal overflow
-   ============================================ */
-
-/* ── 1. ROOT FIX — prevents ALL horizontal overflow ── */
-*, *::before, *::after {
-  box-sizing: border-box;
-  /* Never let any element cause horizontal scroll */
-}
-
-html {
-  overflow-x: hidden;
-  /* Prevents body from being wider than viewport */
   scroll-behavior: smooth;
 }
 
 body {
   overflow-x: hidden;
-  /* Critical: width:100% not 100vw (100vw includes scrollbar width) */
   width: 100%;
   max-width: 100%;
   margin: 0;
   padding: 0;
   min-height: 100vh;
-  min-height: 100dvh; /* Dynamic viewport height for iOS Safari */
+  min-height: 100dvh;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
 #root {
@@ -70,14 +33,22 @@ body {
   min-height: 100dvh;
 }
 
-/* ── 2. SAFE AREA — iOS notch / Dynamic Island ── */
-:root {
-  --safe-top: env(safe-area-inset-top, 0px);
-  --safe-bottom: env(safe-area-inset-bottom, 0px);
-  --safe-left: env(safe-area-inset-left, 0px);
-  --safe-right: env(safe-area-inset-right, 0px);
+main {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
 
-  /* Design tokens */
+img, video, svg, canvas { max-width: 100%; }
+
+p, h1, h2, h3, h4, h5, h6 { overflow-wrap: break-word; word-break: break-word; }
+
+input, select, textarea { font-size: 16px; } /* prevents iOS zoom */
+
+/* ── CSS VARIABLES ── */
+:root {
   --bg-primary: #0a0814;
   --bg-secondary: #100d20;
   --bg-card: #13102a;
@@ -87,163 +58,15 @@ body {
   --accent: #7c3aed;
   --accent-light: #a78bfa;
   --cyan: #06b6d4;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
 }
 
-.dark {
-  color-scheme: dark;
-}
+.dark { color-scheme: dark; }
 
-/* ── 3. TYPOGRAPHY ── */
-body {
-  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  /* Prevent iOS text size adjustment on orientation change */
-  -webkit-text-size-adjust: 100%;
-  text-size-adjust: 100%;
-}
-
-/* ── 4. LAYOUT — flex row, sidebar + main ── */
-.app-layout {
-  display: flex;
-  width: 100%;
-  max-width: 100%;
-  min-height: 100vh;
-  min-height: 100dvh;
-  overflow-x: hidden;
-}
-
-/* ── 5. MAIN CONTENT AREA ── */
-main {
-  flex: 1;
-  min-width: 0; /* CRITICAL — prevents flex child from overflowing */
-  width: 100%;
-  max-width: 100%;
-  overflow-x: hidden;
-  overflow-y: auto;
-}
-
-/* ── 6. PAGE CONTAINERS — mobile padding ── */
-.page-container {
-  width: 100%;
-  max-width: 100%;
-  padding: 1.5rem 1rem; /* px-4 on mobile */
-  overflow-x: hidden;
-}
-
-@media (min-width: 640px) {
-  .page-container {
-    padding: 1.5rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .page-container {
-    padding: 2rem;
-  }
-}
-
-/* ── 7. GLASS CARDS ── */
-.glass-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 1.25rem;
-  /* Prevent card content from overflowing */
-  width: 100%;
-  max-width: 100%;
-  overflow: hidden;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-}
-
-/* ── 8. GRID FIXES — prevent overflow ── */
-.grid {
-  width: 100%;
-  max-width: 100%;
-}
-
-/* Fix: grid columns never exceed container */
-.grid > * {
-  min-width: 0; /* CRITICAL for grid children */
-  max-width: 100%;
-}
-
-/* ── 9. IMAGE & MEDIA ── */
-img, video, svg, canvas {
-  max-width: 100%;
-  height: auto;
-}
-
-/* ── 10. TEXT — prevent long words from breaking layout ── */
-p, h1, h2, h3, h4, h5, h6, span, div {
-  overflow-wrap: break-word;
-  word-break: break-word;
-}
-
-/* ── 11. FIXED POSITION ELEMENTS — respect safe areas ── */
-.fixed-bottom {
-  padding-bottom: calc(0.5rem + var(--safe-bottom));
-  padding-left: calc(0.5rem + var(--safe-left));
-  padding-right: calc(0.5rem + var(--safe-right));
-}
-
-.fixed-top {
-  padding-top: calc(0.5rem + var(--safe-top));
-}
-
-/* ── 12. BOTTOM NAV — mobile safe area ── */
-nav.bottom-nav {
-  padding-bottom: max(0.5rem, var(--safe-bottom));
-  padding-left: max(0.5rem, var(--safe-left));
-  padding-right: max(0.5rem, var(--safe-right));
-}
-
-/* ── 13. SCROLLABLE HORIZONTAL SECTIONS ── */
-/* For heatmap calendar and other wide content */
-.scroll-x {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  max-width: 100%;
-  /* Hide scrollbar on mobile but keep functionality */
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-.scroll-x::-webkit-scrollbar {
-  display: none;
-}
-
-/* ── 14. FORM ELEMENTS ── */
-input, select, textarea {
-  width: 100%;
-  max-width: 100%;
-  /* Prevent iOS zoom on focus (font-size must be 16px+) */
-  font-size: 16px;
-}
-
-/* ── 15. TAILWIND OVERRIDES ── */
-/* Ensure all Tailwind containers respect mobile width */
-.max-w-4xl,
-.max-w-3xl,
-.max-w-2xl,
-.max-w-xl,
-.max-w-lg,
-.max-w-md {
-  width: 100%;
-  max-width: 100%; /* On small screens, never exceed viewport */
-}
-
-@media (min-width: 640px) {
-  .max-w-md { max-width: 28rem; }
-  .max-w-lg { max-width: 32rem; }
-  .max-w-xl { max-width: 36rem; }
-  .max-w-2xl { max-width: 42rem; }
-  .max-w-3xl { max-width: 48rem; }
-  .max-w-4xl { max-width: 56rem; }
-}
-
-/* ── 16. XP BAR ── */
+/* ── XP BAR ── */
 .xp-bar {
   width: 100%;
   height: 6px;
@@ -251,7 +74,6 @@ input, select, textarea {
   border-radius: 999px;
   overflow: hidden;
 }
-
 .xp-bar-fill {
   height: 100%;
   border-radius: 999px;
@@ -259,7 +81,18 @@ input, select, textarea {
   box-shadow: 0 0 8px rgba(124, 58, 237, 0.5);
 }
 
-/* ── 17. NAV LINKS ── */
+/* ── GLASS CARD ── */
+.glass-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 1.25rem;
+  width: 100%;
+  max-width: 100%;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* ── NAV LINK ── */
 .nav-link {
   display: flex;
   align-items: center;
@@ -273,27 +106,22 @@ input, select, textarea {
   text-decoration: none;
   width: 100%;
 }
-
-.nav-link:hover {
-  background: rgba(255, 255, 255, 0.06);
-  color: var(--text-primary);
-}
-
+.nav-link:hover { background: rgba(255,255,255,0.06); color: var(--text-primary); }
 .nav-link.active {
-  background: rgba(124, 58, 237, 0.15);
+  background: rgba(124,58,237,0.15);
   color: var(--accent-light);
-  border: 1px solid rgba(124, 58, 237, 0.2);
+  border: 1px solid rgba(124,58,237,0.2);
 }
 
-/* ── 18. BUTTONS ── */
+/* ── BUTTONS ── */
 .btn-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
   padding: 0.5rem 1rem;
-  background: rgba(124, 58, 237, 0.2);
-  border: 1px solid rgba(124, 58, 237, 0.4);
+  background: rgba(124,58,237,0.2);
+  border: 1px solid rgba(124,58,237,0.4);
   color: var(--accent-light);
   border-radius: 0.75rem;
   font-size: 0.875rem;
@@ -301,14 +129,8 @@ input, select, textarea {
   cursor: pointer;
   transition: all 0.15s;
   white-space: nowrap;
-  /* Prevent button from stretching layout */
-  max-width: 100%;
 }
-
-.btn-primary:hover {
-  background: rgba(124, 58, 237, 0.3);
-  border-color: rgba(124, 58, 237, 0.6);
-}
+.btn-primary:hover { background: rgba(124,58,237,0.3); border-color: rgba(124,58,237,0.6); }
 
 .btn-secondary {
   display: inline-flex;
@@ -316,8 +138,8 @@ input, select, textarea {
   justify-content: center;
   gap: 0.5rem;
   padding: 0.5rem 1rem;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
   color: var(--text-muted);
   border-radius: 0.75rem;
   font-size: 0.875rem;
@@ -325,48 +147,34 @@ input, select, textarea {
   cursor: pointer;
   transition: all 0.15s;
   white-space: nowrap;
-  max-width: 100%;
 }
+.btn-secondary:hover { background: rgba(255,255,255,0.1); color: var(--text-primary); }
 
-.btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--text-primary);
-}
-
-/* ── 19. INPUT FIELDS ── */
+/* ── INPUTS ── */
 .input-field {
   width: 100%;
   padding: 0.625rem 0.875rem;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
   border-radius: 0.75rem;
   color: var(--text-primary);
-  font-size: 16px; /* 16px prevents iOS zoom */
+  font-size: 16px;
   outline: none;
   transition: border-color 0.15s;
-  max-width: 100%;
 }
-
-.input-field:focus {
-  border-color: rgba(124, 58, 237, 0.5);
-  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
-}
-
-.input-field::placeholder {
-  color: var(--text-muted);
-}
+.input-field:focus { border-color: rgba(124,58,237,0.5); box-shadow: 0 0 0 3px rgba(124,58,237,0.1); }
+.input-field::placeholder { color: var(--text-muted); }
 
 .select-field {
   width: 100%;
   padding: 0.625rem 0.875rem;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
   border-radius: 0.75rem;
   color: var(--text-primary);
-  font-size: 16px; /* Prevents iOS zoom */
+  font-size: 16px;
   outline: none;
   cursor: pointer;
-  max-width: 100%;
   appearance: none;
   -webkit-appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.3)' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
@@ -375,7 +183,7 @@ input, select, textarea {
   padding-right: 36px;
 }
 
-/* ── 20. TAGS ── */
+/* ── TAGS ── */
 .tag {
   display: inline-flex;
   align-items: center;
@@ -385,94 +193,34 @@ input, select, textarea {
   font-weight: 600;
   text-transform: capitalize;
   white-space: nowrap;
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
-
-.category-health    { background: rgba(16,185,129,0.12); color: #34d399; border: 1px solid rgba(16,185,129,0.2); }
-.category-mind      { background: rgba(139,92,246,0.12); color: #a78bfa; border: 1px solid rgba(139,92,246,0.2); }
-.category-learning  { background: rgba(6,182,212,0.12);  color: #22d3ee; border: 1px solid rgba(6,182,212,0.2); }
-.category-finance   { background: rgba(245,158,11,0.12); color: #fbbf24; border: 1px solid rgba(245,158,11,0.2); }
-.category-spiritual { background: rgba(244,63,94,0.12);  color: #fb7185; border: 1px solid rgba(244,63,94,0.2); }
+.category-health     { background: rgba(16,185,129,0.12); color: #34d399; border: 1px solid rgba(16,185,129,0.2); }
+.category-mind       { background: rgba(139,92,246,0.12); color: #a78bfa; border: 1px solid rgba(139,92,246,0.2); }
+.category-learning   { background: rgba(6,182,212,0.12);  color: #22d3ee; border: 1px solid rgba(6,182,212,0.2); }
+.category-finance    { background: rgba(245,158,11,0.12); color: #fbbf24; border: 1px solid rgba(245,158,11,0.2); }
+.category-spiritual  { background: rgba(244,63,94,0.12);  color: #fb7185; border: 1px solid rgba(244,63,94,0.2); }
 .category-productivity { background: rgba(99,102,241,0.12); color: #818cf8; border: 1px solid rgba(99,102,241,0.2); }
 
-/* ── 21. PROGRESS RING ── */
-.progress-ring {
-  transform: rotate(-90deg);
-  transform-origin: 50% 50%;
-  overflow: visible;
-}
+/* ── FONTS ── */
+.font-display { font-family: 'Syne', -apple-system, BlinkMacSystemFont, sans-serif; }
+.font-mono    { font-family: 'Space Mono', 'Courier New', monospace; }
 
-/* ── 22. MOBILE PADDING BOTTOM — space for bottom nav ── */
+/* ── UTILITIES ── */
+.text-muted    { color: var(--text-muted); }
+.text-primary  { color: var(--text-primary); }
+.progress-ring { transform: rotate(-90deg); transform-origin: 50% 50%; overflow: visible; }
+
+/* ── SCROLLABLE HORIZONTAL (heatmap etc) ── */
+.scroll-x {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scroll-x::-webkit-scrollbar { display: none; }
+
+/* ── MOBILE BOTTOM NAV SPACING ── */
 @media (max-width: 1023px) {
-  main > * {
-    padding-bottom: calc(5rem + var(--safe-bottom));
-  }
-}
-
-/* ── 23. FONT DISPLAY ── */
-.font-display {
-  font-family: 'Syne', -apple-system, BlinkMacSystemFont, sans-serif;
-}
-
-.font-mono {
-  font-family: 'Space Mono', 'Courier New', monospace;
-}
-
-/* ── 24. TEXT UTILITIES ── */
-.text-muted { color: var(--text-muted); }
-.text-primary { color: var(--text-primary); }
-
-/* ── 25. TRUNCATE UTILITIES ── */
-.truncate {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 100%;
-}
-
-/* ── 26. MODAL OVERLAY — full screen on mobile ── */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 50;
-  display: flex;
-  align-items: flex-end; /* Bottom sheet on mobile */
-  justify-content: center;
-  padding: 0;
-}
-
-@media (min-width: 640px) {
-  .modal-overlay {
-    align-items: center;
-    padding: 1rem;
-  }
-}
-
-.modal-content {
-  width: 100%;
-  max-width: 100%;
-  max-height: 90vh;
-  overflow-y: auto;
-  border-radius: 1.5rem 1.5rem 0 0; /* Bottom sheet style */
-}
-
-@media (min-width: 640px) {
-  .modal-content {
-    max-width: 28rem;
-    border-radius: 1.5rem;
-  }
-}
-
-/* ── LIGHT MODE ── */
-@media (prefers-color-scheme: light) {
-  html:not(.dark) {
-    --bg-primary: #f5f3ff;
-    --bg-secondary: #ede9fe;
-    --bg-card: #ffffff;
-    --text-primary: #1e1b4b;
-    --text-muted: rgba(30, 27, 75, 0.5);
-    --border: rgba(0, 0, 0, 0.08);
-  }
+  main > * { padding-bottom: calc(5rem + var(--safe-bottom)); }
 }
