@@ -3,24 +3,15 @@ import { getLevelProgress } from '../utils/xpSystem';
 import { ACHIEVEMENTS } from '../utils/achievements';
 import { saveUserData, loadUserData } from '../utils/firebase';
 import { useAuth } from './AuthContext';
+import { applyTheme } from '../utils/themes';
 import confetti from 'canvas-confetti';
 
 const AppContext = createContext(null);
 
 const DEFAULT_USER = {
-  name: 'Adventurer',
-  avatar: '🧙',
-  totalXP: 0,
-  streak: 0,
-  lastActiveDate: null,
-  unlockedAchievements: [],
-  habitsCompleted: 0,
-  goalsCompleted: 0,
-  journalEntries: 0,
-  moodLogs: 0,
-  healthLogs: 0,
-  savingsMonths: 0,
-  onboarded: false,
+  name: 'Adventurer', avatar: '🧙', totalXP: 0, streak: 0, lastActiveDate: null,
+  unlockedAchievements: [], habitsCompleted: 0, goalsCompleted: 0,
+  journalEntries: 0, moodLogs: 0, healthLogs: 0, savingsMonths: 0, onboarded: false,
 };
 
 const DEFAULT_HABITS = [
@@ -68,7 +59,7 @@ export function AppProvider({ children }) {
   const [health, setHealth] = useState({});
   const [transactions, setTransactions] = useState([]);
   const [journal, setJournal] = useState([]);
-  const [theme, setTheme] = useState('dark');
+  const [theme, setTheme] = useState('midnight');
   const [budgets, setBudgets] = useState(DEFAULT_BUDGETS);
   const [toast, setToast] = useState(null);
   const [newAchievement, setNewAchievement] = useState(null);
@@ -95,7 +86,8 @@ export function AppProvider({ children }) {
     });
   }, [uid]);
 
-  useEffect(() => { document.documentElement.classList.toggle('dark', theme === 'dark'); }, [theme]);
+  // ✅ CHANGE 1: Use applyTheme instead of classList toggle
+  useEffect(() => { applyTheme(theme); }, [theme]);
 
   const debouncedSave = useRef(debounce((uid, key, data) => { if (uid) saveUserData(uid, key, data); }, 800)).current;
 
@@ -197,7 +189,11 @@ export function AppProvider({ children }) {
 
   const updateJournalEntry = useCallback((id, updates) => setJournal(prev => prev.map(e => e.id === id ? { ...e, ...updates, updatedAt: new Date().toISOString() } : e)), []);
   const deleteJournalEntry = useCallback((id) => setJournal(prev => prev.filter(e => e.id !== id)), []);
-  const toggleTheme = useCallback(() => setTheme(t => t === 'dark' ? 'light' : 'dark'), []);
+
+  // ✅ CHANGE 2: setThemeId + toggleTheme between midnight and blossom
+  const setThemeId = useCallback((id) => setTheme(id), []);
+  const toggleTheme = useCallback(() => setTheme(t => t === 'midnight' ? 'blossom' : 'midnight'), []);
+
   const updateUser = useCallback((updates) => setUser(u => ({ ...u, ...updates })), []);
   const completeOnboarding = useCallback((name, avatar) => setUser(u => ({ ...u, name, avatar, onboarded: true })), []);
 
@@ -210,7 +206,8 @@ export function AppProvider({ children }) {
 
   const resetAllData = useCallback(() => {
     setUser({ ...DEFAULT_USER, onboarded: false, name: firebaseUser?.displayName || 'Adventurer' });
-    setHabits(DEFAULT_HABITS); setGoals(DEFAULT_GOALS); setMoods([]); setHealth({}); setTransactions([]); setJournal([]); setBudgets(DEFAULT_BUDGETS);
+    setHabits(DEFAULT_HABITS); setGoals(DEFAULT_GOALS); setMoods([]); setHealth({});
+    setTransactions([]); setJournal([]); setBudgets(DEFAULT_BUDGETS);
   }, [firebaseUser]);
 
   const todayHealth = health[new Date().toDateString()] || {};
@@ -227,7 +224,9 @@ export function AppProvider({ children }) {
       transactions, addTransaction, deleteTransaction,
       budgets, updateBudget,
       journal, addJournalEntry, updateJournalEntry, deleteJournalEntry,
-      theme, toggleTheme, toast, setToast, newAchievement, addXP, exportData, resetAllData,
+      // ✅ CHANGE 3: added setThemeId to context
+      theme, toggleTheme, setThemeId,
+      toast, setToast, newAchievement, addXP, exportData, resetAllData,
     }}>
       {children}
     </AppContext.Provider>
