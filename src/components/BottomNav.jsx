@@ -1,13 +1,13 @@
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Flame, Target, Timer, User } from 'lucide-react';
+import { LayoutDashboard, Flame, DollarSign, Heart, Users } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const BOTTOM_NAV = [
   { to: '/', icon: LayoutDashboard, label: 'Home' },
   { to: '/habits', icon: Flame, label: 'Habits' },
-  { to: '/goals', icon: Target, label: 'Goals' },
-  { to: '/pomodoro', icon: Timer, label: 'Focus' },
-  { to: '/profile', icon: User, label: 'Profile' },
+  { to: '/finance', icon: DollarSign, label: 'Finance' },
+  { to: '/health', icon: Heart, label: 'Health' },
+  { to: '/leaderboard', icon: Users, label: 'Leaderboard' },
 ];
 
 export default function BottomNav() {
