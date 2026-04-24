@@ -82,9 +82,9 @@ export default function Finance() {
   };
 
   const summaryCards = [
-    { key:'income', label:'Income', value:income, icon:<TrendingUp size={18}/>, textColor:'#34d399', bg:'rgba(16,185,129,0.12)', border:'rgba(16,185,129,0.25)', prefix:'+Rs.' },
-    { key:'expenses', label:'Expenses', value:expenses, icon:<TrendingDown size={18}/>, textColor:'#fb7185', bg:'rgba(244,63,94,0.12)', border:'rgba(244,63,94,0.25)', prefix:'-Rs.' },
-    { key:'savings', label:'Savings', value:Math.abs(savings), icon:<PiggyBank size={18}/>, textColor:savings>=0?'#22d3ee':'#fb7185', bg:savings>=0?'rgba(6,182,212,0.12)':'rgba(244,63,94,0.12)', border:savings>=0?'rgba(6,182,212,0.25)':'rgba(244,63,94,0.25)', prefix:savings>=0?'Rs.':'-Rs.' },
+    { key:'income', label:'Income', value:income, icon:<TrendingUp size={18}/>, textColor:'#34d399', bg:'rgba(16,185,129,0.12)', border:'rgba(16,185,129,0.25)', prefix:'+₹' },
+    { key:'expenses', label:'Expenses', value:expenses, icon:<TrendingDown size={18}/>, textColor:'#fb7185', bg:'rgba(244,63,94,0.12)', border:'rgba(244,63,94,0.25)', prefix:'-₹' },
+    { key:'savings', label:'Savings', value:Math.abs(savings), icon:<PiggyBank size={18}/>, textColor:savings>=0?'#22d3ee':'#fb7185', bg:savings>=0?'rgba(6,182,212,0.12)':'rgba(244,63,94,0.12)', border:savings>=0?'rgba(6,182,212,0.25)':'rgba(244,63,94,0.25)', prefix:savings>=0?'₹':'-₹' },
   ];
 
   return (
@@ -105,7 +105,7 @@ export default function Finance() {
             <ArrowRightCircle size={18} className={prevBalance>0?'text-cyan-400':'text-rose-400'} style={{flexShrink:0,marginTop:2}}/>
             <div className="flex-1">
               <div className="text-sm font-semibold mb-0.5" style={{color:prevBalance>0?'#22d3ee':'#fb7185'}}>
-                {prevBalance>0 ? `Rs.${prevBalance.toLocaleString()} savings from ${MONTHS[prevMonth]}` : `Rs.${Math.abs(prevBalance).toLocaleString()} deficit from ${MONTHS[prevMonth]}`}
+                {prevBalance>0 ?  `₹${prevBalance.toLocaleString()} savings from ${MONTHS[prevMonth]}` :  `₹${Math.abs(prevBalance).toLocaleString()} deficit from ${MONTHS[prevMonth]}`}
               </div>
               <div className="text-xs text-muted">{prevBalance>0?'Carry your leftover savings into this month?':'Log last month deficit in this month?'}</div>
             </div>
@@ -126,7 +126,7 @@ export default function Finance() {
             <div>
               <div className="text-sm font-semibold text-amber-400 mb-1">Budget Alert</div>
               <div className="text-xs flex flex-wrap gap-x-4 gap-y-1">
-                {budgetWarnings.map(cat=>{const spent=expenseByCategory[cat]||0;const limit=budgets[cat];const pct=Math.round((spent/limit)*100);return <span key={cat} style={{color:pct>=100?'#fb7185':'#fbbf24'}}>{pct>=100?'Red':'Yellow'} {cat}: Rs.{spent.toLocaleString()} / Rs.{limit.toLocaleString()} ({pct}%)</span>;})}
+                {budgetWarnings.map(cat=>{const spent=expenseByCategory[cat]||0;const limit=budgets[cat];const pct=Math.round((spent/limit)*100);return <span key={cat} style={{color:pct>=100?'#fb7185':'#fbbf24'}}>{pct>=100?'Red':'Yellow'} {cat}: ₹{spent.toLocaleString()} / ₹{limit.toLocaleString()} ({pct}%)</span>;})}
               </div>
             </div>
           </motion.div>
@@ -166,7 +166,7 @@ export default function Finance() {
                   {catKeys.map((cat,i)=>{const spent=expenseByCategory[cat];const budget=budgets[cat]||0;const over=budget>0&&spent>budget;return(
                     <div key={cat} className="flex items-center justify-between">
                       <div className="flex items-center gap-2"><div className="w-2.5 h-2.5 rounded-full" style={{background:DONUT_COLORS[i]}}/><span className="text-xs text-muted">{cat}</span>{over&&<AlertTriangle size={10} className="text-amber-400"/>}</div>
-                      <div className="text-right"><span className="text-xs font-mono font-medium" style={{color:over?'#fb7185':'var(--text-primary)'}}>Rs.{spent.toLocaleString()}</span>{budget>0&&<span className="text-xs text-muted ml-1">/ Rs.{budget.toLocaleString()}</span>}</div>
+                      <div className="text-right"><span className="text-xs font-mono font-medium" style={{color:over?'#fb7185':'var(--text-primary)'}}>₹{spent.toLocaleString()}</span>{budget>0&&<span className="text-xs text-muted ml-1">/ ₹{budget.toLocaleString()}</span>}</div>
                     </div>
                   );})}
                 </div>
@@ -179,7 +179,7 @@ export default function Finance() {
               <div className="flex flex-col gap-4">
                 {[{label:'Income',amount:income,color:'#34d399'},{label:'Expenses',amount:expenses,color:'#fb7185'},{label:'Savings',amount:Math.max(savings,0),color:'#22d3ee'}].map(item=>(
                   <div key={item.label}>
-                    <div className="flex justify-between text-sm mb-1"><span className="text-muted">{item.label}</span><span className="font-mono font-semibold" style={{color:item.color}}>Rs.{item.amount.toLocaleString()}</span></div>
+                    <div className="flex justify-between text-sm mb-1"><span className="text-muted">{item.label}</span><span className="font-mono font-semibold" style={{color:item.color}}>₹{item.amount.toLocaleString()}</span></div>
                     <div className="h-2 rounded-full" style={{background:'rgba(255,255,255,0.07)'}}><motion.div className="h-full rounded-full" initial={{width:0}} animate={{width:`${income>0?Math.min((item.amount/income)*100,100):0}%`}} transition={{delay:0.3,duration:0.8}} style={{background:item.color}}/></div>
                   </div>
                 ))}
@@ -191,7 +191,7 @@ export default function Finance() {
             <h3 className="font-display font-semibold mb-1" style={{color:'var(--text-primary)'}}>Yearly Summary - {thisYear}</h3>
             <div className="flex gap-6 mb-4 flex-wrap">
               {[{label:'Total Income',value:yearlyIncome,color:'#34d399'},{label:'Total Expenses',value:yearlyExpenses,color:'#fb7185'},{label:'Net Savings',value:Math.abs(yearlyIncome-yearlyExpenses),color:yearlyIncome>=yearlyExpenses?'#22d3ee':'#fb7185'}].map(s=>(
-                <div key={s.label}><div className="font-display font-bold text-xl" style={{color:s.color}}>Rs.{s.value.toLocaleString()}</div><div className="text-xs text-muted">{s.label}</div></div>
+                <div key={s.label}><div className="font-display font-bold text-xl" style={{color:s.color}}>₹{s.value.toLocaleString()}</div><div className="text-xs text-muted">{s.label}</div></div>
               ))}
             </div>
             <Bar data={{
@@ -208,7 +208,7 @@ export default function Finance() {
               },
               scales: {
                 x: { ticks: { color: 'rgba(255,255,255,0.4)', font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.04)' } },
-                y: { ticks: { color: 'rgba(255,255,255,0.4)', font: { size: 10 }, callback: v => `Rs.${(v/1000).toFixed(0)}k` }, grid: { color: 'rgba(255,255,255,0.04)' } },
+                y: { ticks: { color: 'rgba(255,255,255,0.4)', font: { size: 10 }, callback: v =>  `₹${(v/1000).toFixed(0)}k` }, grid: { color: 'rgba(255,255,255,0.04)' } },
               },
             }} />
           </motion.div>
@@ -239,7 +239,7 @@ export default function Finance() {
                 <div key={t.id} className="flex items-center gap-3 p-3 rounded-xl group" style={{background:'rgba(255,255,255,0.03)',border:'1px solid rgba(255,255,255,0.06)'}}>
                   <div className="text-lg">{t.type==='income'?'In':'Out'}</div>
                   <div className="flex-1 min-w-0"><div className="text-sm font-medium" style={{color:'var(--text-primary)'}}>{t.category}</div>{t.description&&<div className="text-xs truncate text-muted">{t.description}</div>}</div>
-                  <div className="text-right"><div className="font-mono font-semibold text-sm" style={{color:t.type==='income'?'#34d399':'#fb7185'}}>{t.type==='income'?'+':'-'}Rs.{t.amount.toLocaleString()}</div><div className="text-xs text-muted">{format(new Date(t.date),'MMM d')}</div></div>
+                  <div className="text-right"><div className="font-mono font-semibold text-sm" style={{color:t.type==='income'?'#34d399':'#fb7185'}}>{t.type==='income'?'+':'-'}₹{t.amount.toLocaleString()}</div><div className="text-xs text-muted">{format(new Date(t.date),'MMM d')}</div></div>
                   <button onClick={()=>deleteTransaction(t.id)} className="opacity-0 group-hover:opacity-100 transition-opacity w-7 h-7 rounded-lg flex items-center justify-center hover:bg-red-500/10"><Trash2 size={12} className="text-red-400"/></button>
                 </div>
               ))}
@@ -255,8 +255,8 @@ export default function Finance() {
           <div className="grid sm:grid-cols-2 gap-3">
             {EXPENSE_CATEGORIES.map(cat=>{const spent=expenseByCategory[cat]||0;const budget=budgets[cat]||0;const pct=budget>0?Math.min((spent/budget)*100,100):0;return(
               <div key={cat} className="p-4 rounded-xl" style={{background:'rgba(255,255,255,0.03)',border:'1px solid var(--border)'}}>
-                <div className="flex items-center justify-between mb-2"><span className="text-sm font-semibold" style={{color:'var(--text-primary)'}}>{cat}</span><span className="text-xs text-muted">Spent: Rs.{spent.toLocaleString()}</span></div>
-                <div className="flex items-center gap-2 mb-2"><span className="text-xs text-muted font-medium">Rs.</span><input type="number" defaultValue={budget||''} placeholder="No limit" onBlur={e=>updateBudget(cat,Number(e.target.value)||0)} className="input-field text-sm py-1.5 flex-1"/></div>
+                <div className="flex items-center justify-between mb-2"><span className="text-sm font-semibold" style={{color:'var(--text-primary)'}}>{cat}</span><span className="text-xs text-muted">Spent: ₹{spent.toLocaleString()}</span></div>
+                <div className="flex items-center gap-2 mb-2"><span className="text-xs text-muted font-medium">₹</span><input type="number" defaultValue={budget||''} placeholder="No limit" onBlur={e=>updateBudget(cat,Number(e.target.value)||0)} className="input-field text-sm py-1.5 flex-1"/></div>
                 {budget>0&&(<><div className="h-1.5 rounded-full mb-1" style={{background:'rgba(255,255,255,0.07)'}}><div className="h-full rounded-full transition-all" style={{width:`${pct}%`,background:pct>=100?'#f43f5e':pct>=80?'#f59e0b':'#10b981'}}/></div><div className="text-xs text-right" style={{color:pct>=100?'#fb7185':pct>=80?'#fbbf24':'#34d399'}}>{Math.round(pct)}% used</div></>)}
               </div>
             );})}
@@ -271,10 +271,10 @@ export default function Finance() {
             <motion.div initial={{scale:0.9}} animate={{scale:1}} exit={{scale:0.9}} className="glass-card p-6 max-w-sm w-full rounded-3xl">
               <div className="flex items-center justify-between mb-4"><h3 className="font-display font-bold text-lg" style={{color:'var(--text-primary)'}}>Carry Forward Balance</h3><button onClick={()=>setShowCarryForward(false)} className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-white/10"><X size={16} style={{color:'var(--text-muted)'}}/></button></div>
               <div className="text-center mb-5">
-                <div className="font-display font-bold text-2xl mb-1" style={{color:prevBalance>0?'#22d3ee':'#fb7185'}}>{prevBalance>0?'+':'-'}Rs.{Math.abs(prevBalance).toLocaleString()}</div>
+                <div className="font-display font-bold text-2xl mb-1" style={{color:prevBalance>0?'#22d3ee':'#fb7185'}}>{prevBalance>0?'+':'-'}₹{Math.abs(prevBalance).toLocaleString()}</div>
                 <div className="text-sm text-muted">{prevBalance>0?`Leftover from ${MONTHS[prevMonth]}`:`Overspent in ${MONTHS[prevMonth]}`}</div>
               </div>
-              <div className="p-3 rounded-xl mb-5" style={{background:'rgba(255,255,255,0.04)',border:'1px solid var(--border)'}}><div className="text-xs text-muted mb-1">This will add to {MONTHS[thisMonth]}:</div><div className="text-sm font-medium" style={{color:prevBalance>0?'#34d399':'#fb7185'}}>{prevBalance>0?`+Rs.${prevBalance.toLocaleString()} income`:`-Rs.${Math.abs(prevBalance).toLocaleString()} expense`} (carry forward)</div></div>
+              <div className="p-3 rounded-xl mb-5" style={{background:'rgba(255,255,255,0.04)',border:'1px solid var(--border)'}}><div className="text-xs text-muted mb-1">This will add to {MONTHS[thisMonth]}:</div><div className="text-sm font-medium" style={{color:prevBalance>0?'#34d399':'#fb7185'}}>{prevBalance>0?`+₹${prevBalance.toLocaleString()} income`:`-₹${Math.abs(prevBalance).toLocaleString()} expense`} (carry forward)</div></div>
               <div className="flex gap-3"><button onClick={()=>setShowCarryForward(false)} className="btn-secondary flex-1">Cancel</button><button onClick={handleCarryForward} className="btn-primary flex-1 justify-center">Confirm</button></div>
             </motion.div>
           </motion.div>
@@ -284,13 +284,13 @@ export default function Finance() {
       {/* Card Detail Modal */}
       <AnimatePresence>
         {expandedCard && (()=>{
-          const d = expandedCard==='income'?{label:'Income',current:income,color:'#34d399',prefix:'+Rs.',txs:monthTx.filter(t=>t.type==='income')}:expandedCard==='expenses'?{label:'Expenses',current:expenses,color:'#fb7185',prefix:'-Rs.',txs:monthTx.filter(t=>t.type==='expense')}:{label:'Savings',current:Math.abs(savings),color:savings>=0?'#22d3ee':'#fb7185',prefix:savings>=0?'Rs.':'-Rs.',txs:[]};
+          const d = expandedCard==='income'?{label:'Income',current:income,color:'#34d399',prefix:'+₹',txs:monthTx.filter(t=>t.type==='income')}:expandedCard==='expenses'?{label:'Expenses',current:expenses,color:'#fb7185',prefix:'-₹',txs:monthTx.filter(t=>t.type==='expense')}:{label:'Savings',current:Math.abs(savings),color:savings>=0?'#22d3ee':'#fb7185',prefix:savings>=0?'₹':'-₹',txs:[]};
           return(
             <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4" style={{background:'rgba(0,0,0,0.75)',backdropFilter:'blur(8px)'}} onClick={e=>e.target===e.currentTarget&&setExpandedCard(null)}>
               <motion.div initial={{y:60,opacity:0}} animate={{y:0,opacity:1}} exit={{y:60,opacity:0}} className="glass-card p-6 w-full max-w-md rounded-3xl max-h-[80vh] overflow-y-auto">
                 <div className="flex items-center justify-between mb-4"><h3 className="font-display font-bold text-xl" style={{color:'var(--text-primary)'}}>{d.label} Details</h3><button onClick={()=>setExpandedCard(null)} className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-white/10"><X size={16} style={{color:'var(--text-muted)'}}/></button></div>
                 <div className="text-3xl font-display font-bold mb-4" style={{color:d.color}}>{d.prefix}{d.current.toLocaleString()}</div>
-                {d.txs.length>0?(<div className="flex flex-col gap-2">{[...d.txs].reverse().map(t=>(<div key={t.id} className="flex items-center justify-between p-3 rounded-xl" style={{background:'rgba(255,255,255,0.03)',border:'1px solid rgba(255,255,255,0.06)'}}><div><div className="text-sm font-medium" style={{color:'var(--text-primary)'}}>{t.category}</div>{t.description&&<div className="text-xs text-muted">{t.description}</div>}</div><div className="text-right"><div className="font-mono font-bold text-sm" style={{color:d.color}}>Rs.{t.amount.toLocaleString()}</div><div className="text-xs text-muted">{format(new Date(t.date),'MMM d')}</div></div></div>))}</div>):(<p className="text-sm text-center text-muted py-4">Savings = Income - Expenses</p>)}
+                {d.txs.length>0?(<div className="flex flex-col gap-2">{[...d.txs].reverse().map(t=>(<div key={t.id} className="flex items-center justify-between p-3 rounded-xl" style={{background:'rgba(255,255,255,0.03)',border:'1px solid rgba(255,255,255,0.06)'}}><div><div className="text-sm font-medium" style={{color:'var(--text-primary)'}}>{t.category}</div>{t.description&&<div className="text-xs text-muted">{t.description}</div>}</div><div className="text-right"><div className="font-mono font-bold text-sm" style={{color:d.color}}>₹{t.amount.toLocaleString()}</div><div className="text-xs text-muted">{format(new Date(t.date),'MMM d')}</div></div></div>))}</div>):(<p className="text-sm text-center text-muted py-4">Savings = Income - Expenses</p>)}
               </motion.div>
             </motion.div>
           );
