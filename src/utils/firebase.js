@@ -3,14 +3,14 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/
 import { getDatabase, ref, set, get, onValue, off } from 'firebase/database';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDfB-Uf0pw41D4STF--ehyydKbzTu0k3o8",
-  authDomain: "life-dashboard-312e8.firebaseapp.com",
-  databaseURL: "https://life-dashboard-312e8-default-rtdb.firebaseio.com",
-  projectId: "life-dashboard-312e8",
-  storageBucket: "life-dashboard-312e8.firebasestorage.app",
-  messagingSenderId: "941842730429",
-  appId: "1:941842730429:web:6de52cf480b8a0417596d4",
-  measurementId: "G-N2C6BK3HD2"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
 const app = initializeApp(firebaseConfig);

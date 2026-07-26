@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useCallback, useEffect, useRef } from 'react';
 import { getLevelProgress } from '../utils/xpSystem';
 import { ACHIEVEMENTS } from '../utils/achievements';
-import { saveUserData, loadUserData } from '../utils/firebase';
+import { saveUserData, listenToUserData } from '../utils/firebase';
 import { useAuth } from './AuthContext';
 import { applyTheme } from '../utils/themes';
 import confetti from 'canvas-confetti';
@@ -68,7 +68,9 @@ export function AppProvider({ children }) {
   useEffect(() => {
     if (!uid) return;
     setDataLoaded(false);
-    loadUserData(uid).then((data) => {
+
+    // Real-time listener: fires immediately with current data, then on every remote change
+    const unsubscribe = listenToUserData(uid, (data) => {
       if (data) {
         if (data.user) setUser(u => ({ ...DEFAULT_USER, ...data.user }));
         if (data.habits) setHabits(data.habits);
@@ -84,6 +86,9 @@ export function AppProvider({ children }) {
       }
       setDataLoaded(true);
     });
+
+    // Unsubscribe when uid changes or component unmounts
+    return () => unsubscribe();
   }, [uid]);
 
   // ✅ CHANGE 1: Use applyTheme instead of classList toggle
@@ -204,6 +209,22 @@ export function AppProvider({ children }) {
     const a = document.createElement('a'); a.href = url; a.download = `life-dashboard-backup-${new Date().toLocaleDateString('en-CA')}.json`; a.click(); URL.revokeObjectURL(url);
   }, [user, habits, goals, moods, health, transactions, journal, budgets]);
 
+  const exportCSV = useCallback(() => {
+    if (transactions.length === 0) return;
+    const headers = ['Date', 'Type', 'Category', 'Title', 'Amount'];
+    const rows = transactions.map(t => [
+      new Date(t.date).toLocaleDateString('en-CA'),
+      t.type,
+      t.category,
+      `"${(t.title || '').replace(/"/g, '""')}"`,
+      t.amount
+    ]);
+    const csvContent = [headers, ...rows].map(e => e.join(',')).join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = `life-dashboard-finance-${new Date().toLocaleDateString('en-CA')}.csv`; a.click(); URL.revokeObjectURL(url);
+  }, [transactions]);
+
   const resetAllData = useCallback(() => {
     setUser({ ...DEFAULT_USER, onboarded: false, name: firebaseUser?.displayName || 'Adventurer' });
     setHabits(DEFAULT_HABITS); setGoals(DEFAULT_GOALS); setMoods([]); setHealth({});
@@ -226,7 +247,7 @@ export function AppProvider({ children }) {
       journal, addJournalEntry, updateJournalEntry, deleteJournalEntry,
       // ✅ CHANGE 3: added setThemeId to context
       theme, toggleTheme, setThemeId,
-      toast, setToast, newAchievement, addXP, exportData, resetAllData,
+      toast, setToast, newAchievement, addXP, exportData, exportCSV, resetAllData,
     }}>
       {children}
     </AppContext.Provider>

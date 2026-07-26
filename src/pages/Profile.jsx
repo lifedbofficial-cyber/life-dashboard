@@ -2,15 +2,14 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useApp } from '../context/AppContext';
 import { useAuth } from '../context/AuthContext';
-import { getLevelProgress, getLevelTitle, LEVEL_THRESHOLDS } from '../utils/xpSystem';
 import { ACHIEVEMENTS } from '../utils/achievements';
-import { Download, Trash2, Edit3, Check, X } from 'lucide-react';
+import { Download, Trash2, Edit3, Check, X, FileText, Calendar } from 'lucide-react';
 import { NotificationSettings } from '../components/notifications';
 
-const AVATARS = ['🧙','🦸','🧑‍🚀','🧑‍💻','🧝','🥷','🧑‍🎨','🦊','🐉','⚡','🌟','🔥','💎','🚀','🎯'];
+const AVATARS = ['🧙', '🦸', '🧑‍🚀', '🧑‍💻', '🧝', '🥷', '🧑‍🎨', '🦊', '🐉', '⚡', '🌟', '🔥', '💎', '🚀', '🎯'];
 
 export default function Profile() {
-  const { user, updateUser, levelData, habits, goals, journal, exportData, resetAllData } = useApp();
+  const { user, updateUser, levelData, exportData, exportCSV, resetAllData } = useApp();
   const { firebaseUser, logout } = useAuth();
   const [editingName, setEditingName] = useState(false);
   const [editingAvatar, setEditingAvatar] = useState(false);
@@ -174,7 +173,7 @@ export default function Profile() {
             <button onClick={logout} className="btn-secondary text-sm px-4 py-2">Sign Out</button>
           </div>
 
-          {/* Export */}
+          {/* Export JSON Backup */}
           <div className="flex items-center justify-between p-4 rounded-xl" style={{ background: 'rgba(6,182,212,0.06)', border: '1px solid rgba(6,182,212,0.15)' }}>
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: 'rgba(6,182,212,0.15)' }}>
@@ -182,12 +181,44 @@ export default function Profile() {
               </div>
               <div>
                 <div className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Export Backup</div>
-                <div className="text-xs text-muted">Download all your data as JSON</div>
+                <div className="text-xs text-muted">Download all data as JSON</div>
               </div>
             </div>
             <button onClick={exportData} className="btn-secondary text-sm px-4 py-2 flex items-center gap-2">
-              <Download size={14} /> Export
+              <Download size={14} /> JSON
             </button>
+          </div>
+
+          {/* Export Finance CSV */}
+          <div className="flex items-center justify-between p-4 rounded-xl" style={{ background: 'rgba(16,185,129,0.06)', border: '1px solid rgba(16,185,129,0.15)' }}>
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: 'rgba(16,185,129,0.15)' }}>
+                <FileText size={16} className="text-emerald-400" />
+              </div>
+              <div>
+                <div className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Export Finance</div>
+                <div className="text-xs text-muted">Transactions as CSV</div>
+              </div>
+            </div>
+            <button onClick={exportCSV} className="btn-secondary text-sm px-4 py-2 flex items-center gap-2">
+              <Download size={14} /> CSV
+            </button>
+          </div>
+
+          {/* Weekly Report Shortcut */}
+          <div className="flex items-center justify-between p-4 rounded-xl" style={{ background: 'rgba(139,92,246,0.06)', border: '1px solid rgba(139,92,246,0.15)' }}>
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: 'rgba(139,92,246,0.15)' }}>
+                <Calendar size={16} className="text-purple-400" />
+              </div>
+              <div>
+                <div className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Weekly Report</div>
+                <div className="text-xs text-muted">Shareable summary card</div>
+              </div>
+            </div>
+            <a href="/weekly" className="btn-secondary text-sm px-4 py-2 text-center" style={{ textDecoration: 'none' }}>
+              View
+            </a>
           </div>
 
           {/* Reset */}

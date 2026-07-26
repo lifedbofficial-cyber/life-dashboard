@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useApp } from '../context/AppContext';
 import { useAuth } from '../context/AuthContext';
 import { ChevronRight, Sparkles, Check, Loader2 } from 'lucide-react';
-import { loadGoogleScript, signInWithGoogle, GOOGLE_CLIENT_ID } from '../utils/googleAuth';
+
 
 const AVATARS = ['🧙','🦸','🧑‍🚀','🧑‍💻','🧝','🥷','🧑‍🎨','🦊','🐉','⚡','🌟','🔥','💎','🚀','🎯'];
 
